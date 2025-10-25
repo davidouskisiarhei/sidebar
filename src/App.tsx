@@ -42,7 +42,7 @@ function App() {
                 }
               >
                 <MenuItem1Icon className={"size-6"} />
-                <p className={"hidden group-aria-expanded:block"}>
+                <p className={"block md:hidden md:group-aria-expanded:block"}>
                   Menu item 1
                 </p>
               </div>
@@ -50,7 +50,7 @@ function App() {
 
             <Sidebar.SubItems
               className={classNames(
-                "flex flex-col items-start gap-2 group-aria-[expanded=false]:absolute group-aria-[expanded=false]:hidden group-aria-[expanded=false]:rounded-lg group-aria-[expanded=false]:border group-aria-[expanded=false]:bg-white group-aria-[expanded=false]:p-2 group-aria-[expanded=true]:pl-8 group-aria-[expanded=true]:pt-3 group-aria-[expanded=false]:group-hover/item-wrapper:flex peer-data-[active=false]:hidden",
+                "fixed bottom-[93px] left-0 flex w-screen flex-col items-start gap-2 border-t p-2 peer-data-[active=false]:hidden md:relative md:bottom-auto md:w-auto md:border-t-0 md:p-0 md:group-aria-[expanded=false]:absolute md:group-aria-[expanded=false]:hidden md:group-aria-[expanded=false]:rounded-lg md:group-aria-[expanded=false]:border md:group-aria-[expanded=false]:bg-white md:group-aria-[expanded=false]:p-2 md:group-aria-[expanded=true]:pl-8 md:group-aria-[expanded=true]:pt-3 md:group-aria-[expanded=false]:group-hover/item-wrapper:flex",
                 { "!flex": subItemsIsOpen },
               )}
             >
@@ -109,7 +109,9 @@ function App() {
               }
             >
               <MenuItem2Icon className={"size-6"} />
-              <p className={"hidden group-aria-expanded:block"}>Menu item 2</p>
+              <p className={"block md:hidden md:group-aria-expanded:block"}>
+                Menu item 2
+              </p>
             </Link>
           </Sidebar.Item>
 
@@ -124,7 +126,9 @@ function App() {
               }
             >
               <MenuItem3Icon className={"size-6"} />
-              <p className={"hidden group-aria-expanded:block"}>Menu item 3</p>
+              <p className={"block md:hidden md:group-aria-expanded:block"}>
+                Menu item 3
+              </p>
             </Link>
           </Sidebar.Item>
         </Sidebar.Items>
