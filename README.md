@@ -1,46 +1,27 @@
-# Getting Started with Create React App
+# Основная информация по проекту
+Проект реализован с использованием библиотек react, typescript и tailwind
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+⚠ Опираясь на пункт 3 в требованиях к выполнению (см. ниже), json объекты не используются, поэтому пункты меню расписаны вручную, а не перебором массива, что может сказывается на удобстве чтения кода
 
-## Available Scripts
+Компонент Sidebar реализован по абстракции написания headless, что подразумевает за собой компонент, который отвечает только за логику работы основного функционала, стили должны быть реализованы в компоненте потребителе
 
-In the project directory, you can run:
+Логика работы компонента Sidebar представлена на примере интеграции с React Router
 
-### `npm start`
+Компонент Sidebar стилизован и адаптирован под веб и мобильные версии, брейкпоинт перехода 768px, принцип адаптирования mobile-first
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Выбранный подход опирается на пример реализаций библиотек react-bootstrap и headless ui. От bootstrap была взята идея реализации удобной вложенности компонентов, пример: Sidebar основной компонент, а компоненты Sidebar.Item, Sidebar.ToggleItem и т.д. вложены в него, что позволяет импортировать один компонет Sidebar и комфортно использовать относящиеся к нему компоненты. От headless ui была взята идея логики работы контекста, чтобы основной компонент Sidebar и его дочерние компоненты имели доступ к основному дереву состояний, при этом дочерние компоненты нельзя использовать за пределами основного компонента, они будут возвращать ошибку
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Для запуска проекта в режиме разработки использовать команду `npm start`
 
-### `npm test`
+### Для сборки проекта использовать команду `npm run build`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Требования к разработке
 
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. Использовать React, TypeScript, Tailwind
+2. Логика работы соответствует видео и макетам
+3. Меню должно быть написано с использованием JSX-нотации, то есть полностью компонентный подход, JSON/JS-like конфигурационные объекты не подойдут
+4. Удобный компонентный API при котором интегрировать такое меню с внешним стейтом (роутер, localStorage, useState & etc.) не вызовет сложностей
+5. Headless UI реализация – ваш компонент должен обеспечивать только логику работы, а внешний вид и стилизация должны находиться в компоненте-потребителе, который кроме стилей ничего больше не добавляет
+6. Продемонстрировать гибкость выбранного подхода на примере интеграции меню с React Router, при этом React Router не может быть использован внутри вашего headless меню напрямую – вся логика роутинга должна находиться только в компоненте-потребителе
+7. Оставить полезные комменты в коде
+8. Реализовать мобильный вариант — при изменении размеров вью-порта, меню адаптирует свою работу под мобильные устройства
