@@ -26,23 +26,29 @@ function App() {
       <Sidebar
         defaultExpanded
         className={
-          "group fixed bottom-0 flex w-screen justify-center border-t p-5 md:relative md:h-screen md:w-fit md:flex-col md:justify-between md:gap-2 md:border-r md:aria-expanded:w-52"
+          "group fixed bottom-0 flex w-screen justify-center border-t bg-white p-2 md:relative md:h-screen md:w-fit md:flex-col md:justify-between md:gap-2 md:border-r md:aria-expanded:w-52"
         }
       >
-        <Sidebar.Items className={"flex gap-5 md:flex-col"}>
+        <Sidebar.Items className={"flex gap-2 md:flex-col"}>
           <Sidebar.ItemWrapper className={"group/item-wrapper relative"}>
             <Sidebar.Item
               isActive={menuId === "menu-item-1"}
-              className={"peer data-[active=true]:text-cyan-600"}
+              className={
+                "peer w-full p-3 hover:rounded-md hover:bg-gray-100 data-[active=true]:rounded-md data-[active=true]:bg-gray-100 data-[active=true]:text-cyan-700"
+              }
               onClick={() => setSubItemsIsOpen((prev) => !prev)}
             >
               <div
                 className={
-                  "flex flex-col items-center gap-1 md:h-7 md:flex-row md:gap-2"
+                  "group/item flex flex-col items-center gap-1 md:flex-row md:gap-3"
                 }
               >
                 <MenuItem1Icon className={"size-6"} />
-                <p className={"block md:hidden md:group-aria-expanded:block"}>
+                <p
+                  className={
+                    "block whitespace-nowrap md:hidden md:group-aria-expanded:block md:group-aria-[expanded=false]:hidden"
+                  }
+                >
                   Menu item 1
                 </p>
               </div>
@@ -50,19 +56,28 @@ function App() {
 
             <Sidebar.SubItems
               className={classNames(
-                "fixed bottom-[93px] left-0 flex w-screen flex-col items-start gap-2 border-t p-2 peer-data-[active=false]:hidden md:relative md:bottom-auto md:w-auto md:border-t-0 md:p-0 md:group-aria-[expanded=false]:absolute md:group-aria-[expanded=false]:hidden md:group-aria-[expanded=false]:rounded-lg md:group-aria-[expanded=false]:border md:group-aria-[expanded=false]:bg-white md:group-aria-[expanded=false]:p-2 md:group-aria-[expanded=true]:pl-8 md:group-aria-[expanded=true]:pt-3 md:group-aria-[expanded=false]:group-hover/item-wrapper:flex",
+                "fixed bottom-[93px] left-0 z-10 flex w-screen flex-col items-start gap-1 border-t bg-white p-2 peer-data-[active=false]:hidden md:relative md:bottom-auto md:w-auto md:border-t-0 md:p-0 md:group-aria-[expanded=false]:absolute md:group-aria-[expanded=false]:left-12 md:group-aria-[expanded=false]:top-0 md:group-aria-[expanded=false]:hidden md:group-aria-[expanded=false]:rounded-lg md:group-aria-[expanded=false]:border md:group-aria-[expanded=false]:p-2 md:group-aria-[expanded=true]:pl-4 md:group-aria-[expanded=true]:pt-2 md:group-aria-[expanded=false]:group-hover/item-wrapper:flex",
                 { "!flex": subItemsIsOpen },
               )}
             >
+              <p
+                className={
+                  "hidden whitespace-nowrap p-2 font-bold md:group-aria-[expanded=false]:block"
+                }
+              >
+                Menu item 1
+              </p>
               <Sidebar.SubItem
                 isActive={
                   menuId === "menu-item-1" && submenuId === "sub-menu-item-1"
                 }
-                className={"data-[active=true]:text-cyan-600"}
+                className={
+                  "flex w-full text-left hover:rounded-md hover:bg-gray-100 data-[active=true]:rounded-md data-[active=true]:bg-gray-100 data-[active=true]:text-cyan-700"
+                }
               >
                 <Link
                   to={"/menu-item-1/sub-menu-item-1"}
-                  className={"whitespace-nowrap"}
+                  className={"whitespace-nowrap p-2"}
                 >
                   Sub item 1
                 </Link>
@@ -72,11 +87,13 @@ function App() {
                 isActive={
                   menuId === "menu-item-1" && submenuId === "sub-menu-item-2"
                 }
-                className={"data-[active=true]:text-cyan-600"}
+                className={
+                  "flex w-full text-left hover:rounded-md hover:bg-gray-100 data-[active=true]:rounded-md data-[active=true]:bg-gray-100 data-[active=true]:text-cyan-700"
+                }
               >
                 <Link
                   to={"/menu-item-1/sub-menu-item-2"}
-                  className={"whitespace-nowrap"}
+                  className={"whitespace-nowrap p-2"}
                 >
                   Sub item 2
                 </Link>
@@ -86,11 +103,13 @@ function App() {
                 isActive={
                   menuId === "menu-item-1" && submenuId === "sub-menu-item-3"
                 }
-                className={"data-[active=true]:text-cyan-600"}
+                className={
+                  "flex w-full text-left hover:rounded-md hover:bg-gray-100 data-[active=true]:rounded-md data-[active=true]:bg-gray-100 data-[active=true]:text-cyan-700"
+                }
               >
                 <Link
                   to={"/menu-item-1/sub-menu-item-3"}
-                  className={"whitespace-nowrap"}
+                  className={"whitespace-nowrap p-2"}
                 >
                   Sub item 3
                 </Link>
@@ -100,16 +119,22 @@ function App() {
 
           <Sidebar.Item
             isActive={menuId === "menu-item-2"}
-            className={"data-[active=true]:text-cyan-600"}
+            className={
+              "relative hover:rounded-md hover:bg-gray-100 data-[active=true]:rounded-md data-[active=true]:bg-gray-100 data-[active=true]:text-cyan-700"
+            }
           >
             <Link
               to={"/menu-item-2"}
               className={
-                "flex flex-col items-center gap-1 md:h-7 md:flex-row md:gap-2"
+                "group/item flex flex-col items-center gap-1 p-3 md:flex-row md:gap-3"
               }
             >
               <MenuItem2Icon className={"size-6"} />
-              <p className={"block md:hidden md:group-aria-expanded:block"}>
+              <p
+                className={
+                  "block whitespace-nowrap md:hidden md:group-aria-expanded:block md:group-aria-[expanded=false]:group-hover/item:absolute md:group-aria-[expanded=false]:group-hover/item:left-16 md:group-aria-[expanded=false]:group-hover/item:block md:group-aria-[expanded=false]:group-hover/item:rounded-md md:group-aria-[expanded=false]:group-hover/item:bg-gray-100 md:group-aria-[expanded=false]:group-hover/item:p-2 md:group-aria-[expanded=false]:group-hover/item:text-black"
+                }
+              >
                 Menu item 2
               </p>
             </Link>
@@ -117,16 +142,22 @@ function App() {
 
           <Sidebar.Item
             isActive={menuId === "menu-item-3"}
-            className={"data-[active=true]:text-cyan-600"}
+            className={
+              "relative hover:rounded-md hover:bg-gray-100 data-[active=true]:rounded-md data-[active=true]:bg-gray-100 data-[active=true]:text-cyan-700"
+            }
           >
             <Link
               to={"/menu-item-3"}
               className={
-                "flex flex-col items-center gap-1 md:h-7 md:flex-row md:gap-2"
+                "group/item flex flex-col items-center gap-1 p-3 md:flex-row md:gap-3"
               }
             >
               <MenuItem3Icon className={"size-6"} />
-              <p className={"block md:hidden md:group-aria-expanded:block"}>
+              <p
+                className={
+                  "block whitespace-nowrap md:hidden md:group-aria-expanded:block md:group-aria-[expanded=false]:group-hover/item:absolute md:group-aria-[expanded=false]:group-hover/item:left-16 md:group-aria-[expanded=false]:group-hover/item:block md:group-aria-[expanded=false]:group-hover/item:rounded-md md:group-aria-[expanded=false]:group-hover/item:bg-gray-100 md:group-aria-[expanded=false]:group-hover/item:p-2 md:group-aria-[expanded=false]:group-hover/item:text-black"
+                }
+              >
                 Menu item 3
               </p>
             </Link>
@@ -134,10 +165,12 @@ function App() {
         </Sidebar.Items>
 
         <Sidebar.ToggleItem
-          className={"hidden w-fit md:block"}
+          className={
+            "hidden w-fit p-3 hover:rounded-md hover:bg-gray-100 data-[active=true]:rounded-md md:block"
+          }
           onClick={() => setSubItemsIsOpen(false)}
         >
-          <ExpandIcon className={"h-5 w-5"} />
+          <ExpandIcon className={"size-6 group-aria-expanded:rotate-180"} />
         </Sidebar.ToggleItem>
       </Sidebar>
     </div>
