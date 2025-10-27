@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.css": "/davidouskisiarhei/sidebar/static/css/main.204a5ca1.css",
-    "main.js": "/davidouskisiarhei/sidebar/static/js/main.725eee41.js",
-    "index.html": "/davidouskisiarhei/sidebar/index.html",
-    "main.204a5ca1.css.map": "/davidouskisiarhei/sidebar/static/css/main.204a5ca1.css.map",
-    "main.725eee41.js.map": "/davidouskisiarhei/sidebar/static/js/main.725eee41.js.map"
+    "main.css": "/sidebar/static/css/main.204a5ca1.css",
+    "main.js": "/sidebar/static/js/main.725eee41.js",
+    "index.html": "/sidebar/index.html",
+    "main.204a5ca1.css.map": "/sidebar/static/css/main.204a5ca1.css.map",
+    "main.725eee41.js.map": "/sidebar/static/js/main.725eee41.js.map"
   },
   "entrypoints": [
     "static/css/main.204a5ca1.css",
