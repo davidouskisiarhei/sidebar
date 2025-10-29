@@ -8,12 +8,15 @@ import React, {
   SetStateAction,
   useContext,
   MouseEventHandler,
+  Children,
+  isValidElement,
+  cloneElement,
 } from "react"
-import { BrowserRouter, Link, NavLink, Routes, useLocation } from "react-router"
+import { BrowserRouter, NavLink } from "react-router"
+import classNames from "classnames"
 
 import { Sidebar } from "./headless/Sidebar"
-import { ExpandIcon, MenuItem1Icon, MenuItem2Icon } from "../assets/icons"
-import classNames from "classnames"
+import { ExpandIcon } from "../assets/icons"
 
 const AppMenuContext = createContext<{
   openSubItems: SubItems
@@ -103,10 +106,30 @@ AppMenu.Group = function AppMenuGroup({
         >
           {label}
         </p>
-        {children}
+        {Children.map(children, (child) => {
+          if (isValidElement(child) && child.type === AppMenu.Item) {
+            const props = { ...(child.props as AppMenuItemProps) }
+
+            props.to = `${to}/${props.to}` // !!!
+
+            return cloneElement(child, { ...props })
+          }
+
+          throw new Error(
+            "Компонент <AppMenu.Group /> принимает только компоненты <AppMenu.Item />",
+          )
+        })}
       </Sidebar.SubItems>
     </Sidebar.ItemWrapper>
   )
+}
+
+type AppMenuItemProps = {
+  to: string
+  label: string
+  icon?: (props: SVGProps<SVGSVGElement>) => JSX.Element
+  onClick?: MouseEventHandler<HTMLAnchorElement>
+  className?: string
 }
 
 AppMenu.Item = function AppMenuItem({
@@ -115,13 +138,7 @@ AppMenu.Item = function AppMenuItem({
   icon: Icon,
   onClick,
   className,
-}: {
-  to: string
-  label: string
-  icon?: (props: SVGProps<SVGSVGElement>) => JSX.Element
-  onClick?: MouseEventHandler<HTMLAnchorElement>
-  className?: string
-}) {
+}: AppMenuItemProps) {
   return (
     <NavLink to={to} className={className} onClick={onClick}>
       {({ isActive }) => (
