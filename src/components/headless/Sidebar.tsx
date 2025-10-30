@@ -61,25 +61,6 @@ Sidebar.Items = function Items({
   return <div className={className}>{children}</div>
 }
 
-// обертка, может использоваться в случае, если для пункта сайдбара (Sidebar.Item)
-// существуют подпункты (Sidebar.SubItems)
-Sidebar.ItemWrapper = function ItemWrapper({
-  className,
-  children,
-}: {
-  className?: string
-  children: ReactNode
-}) {
-  const sidebarContext = useContext(SidebarContext)
-
-  if (sidebarContext === null)
-    throw new Error(
-      "Для компонента <Sidebar.ItemWrapper /> отсутствует родительский компонент <Sidebar />",
-    )
-
-  return <div className={className}>{children}</div>
-}
-
 // основной пункт сайдбара
 Sidebar.Item = function Item<T extends ElementType = "button">({
   isActive, // флаг, который указывает на то, активный пункт или нет
@@ -96,50 +77,6 @@ Sidebar.Item = function Item<T extends ElementType = "button">({
   if (sidebarContext === null)
     throw new Error(
       "Для компонента <Sidebar.Item /> отсутствует родительский компонент <Sidebar />",
-    )
-
-  // дата атрибут data-active установлен для удобного взаимодействия в компоненте потребителе
-  return (
-    <button data-active={isActive} className={className} onClick={onClick}>
-      {children}
-    </button>
-  )
-}
-
-// обертка, которая содержит подпункты списка сайдбара (Sidebar.SubItem)
-Sidebar.SubItems = function SubItems({
-  className,
-  children,
-}: {
-  className?: string
-  children: ReactNode
-}) {
-  const sidebarContext = useContext(SidebarContext)
-
-  if (sidebarContext === null)
-    throw new Error(
-      "Для компонента <Sidebar.SubItems /> отсутствует родительский компонент <Sidebar />",
-    )
-
-  return <div className={className}>{children}</div>
-}
-
-// подпункт сайдбара
-Sidebar.SubItem = function SubItem({
-  isActive, // флаг, который указывает на то, активный подпункт или нет
-  className,
-  onClick,
-  children,
-}: PropsWithChildren<{
-  isActive?: boolean
-  className?: string
-  onClick?: MouseEventHandler<HTMLButtonElement>
-}>) {
-  const sidebarContext = useContext(SidebarContext)
-
-  if (sidebarContext === null)
-    throw new Error(
-      "Для компонента <Sidebar.SubItem /> отсутствует родительский компонент <Sidebar />",
     )
 
   // дата атрибут data-active установлен для удобного взаимодействия в компоненте потребителе

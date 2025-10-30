@@ -136,7 +136,7 @@ function App() {
         {/*</Sidebar.Item>*/}
 
         <AppMenu.Group
-          to={"menu-item-1"}
+          path={"menu-item-1"}
           icon={MenuItem1Icon}
           label={"Menu item 1"}
         >

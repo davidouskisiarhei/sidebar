@@ -11,8 +11,9 @@ import React, {
   Children,
   isValidElement,
   cloneElement,
+  useEffect,
 } from "react"
-import { BrowserRouter, NavLink } from "react-router"
+import { BrowserRouter, NavLink, useLocation } from "react-router"
 import classNames from "classnames"
 
 import { Sidebar } from "./headless/Sidebar"
@@ -21,6 +22,7 @@ import { ExpandIcon } from "../assets/icons"
 const AppMenuContext = createContext<{
   openSubItems: SubItems
   setOpenSubItems: Dispatch<SetStateAction<SubItems>>
+  pathname: string
 } | null>(null)
 
 type SubItems = { [key: string]: boolean }
@@ -32,42 +34,54 @@ export function AppMenu({
   basename?: string
   children: ReactNode
 }) {
-  const [openSubItems, setOpenSubItems] = useState<SubItems>({})
-
   return (
     <BrowserRouter basename={basename}>
-      <AppMenuContext value={{ openSubItems, setOpenSubItems }}>
-        <Sidebar
-          defaultExpanded
-          className={
-            "group fixed bottom-0 flex w-screen justify-center border-t bg-white p-2 md:relative md:h-screen md:w-fit md:flex-col md:justify-between md:gap-2 md:border-r md:aria-expanded:w-52"
-          }
-        >
-          <Sidebar.Items className={"flex gap-2 md:flex-col"}>
-            {children}
-          </Sidebar.Items>
-
-          <Sidebar.ToggleItem
-            className={
-              "hidden w-fit p-3 hover:rounded-md hover:bg-gray-100 data-[active=true]:rounded-md md:block"
-            }
-            onClick={() => setOpenSubItems({})}
-          >
-            <ExpandIcon className={"size-6 group-aria-expanded:rotate-180"} />
-          </Sidebar.ToggleItem>
-        </Sidebar>
-      </AppMenuContext>
+      <AppMenuContent>{children}</AppMenuContent>
     </BrowserRouter>
   )
 }
 
+function AppMenuContent({ children }: { children: ReactNode }) {
+  const { pathname } = useLocation()
+
+  const [openSubItems, setOpenSubItems] = useState<SubItems>({})
+
+  useEffect(() => {
+    setOpenSubItems({})
+  }, [pathname])
+
+  return (
+    <AppMenuContext value={{ openSubItems, setOpenSubItems, pathname }}>
+      <Sidebar
+        defaultExpanded
+        className={
+          "group fixed bottom-0 flex w-screen justify-center border-t bg-white p-2 md:relative md:h-screen md:w-fit md:flex-col md:justify-between md:gap-2 md:border-r md:aria-expanded:w-52"
+        }
+      >
+        <Sidebar.Items className={"flex gap-2 md:flex-col"}>
+          {children}
+        </Sidebar.Items>
+
+        <Sidebar.ToggleItem
+          className={
+            "hidden w-fit p-3 hover:rounded-md hover:bg-gray-100 data-[active=true]:rounded-md md:block"
+          }
+          onClick={() => setOpenSubItems({})}
+        >
+          <ExpandIcon className={"size-6 group-aria-expanded:rotate-180"} />
+        </Sidebar.ToggleItem>
+      </Sidebar>
+    </AppMenuContext>
+  )
+}
+
 AppMenu.Group = function AppMenuGroup({
-  to,
+  path,
   icon,
   label,
   children,
 }: {
-  to: string
+  path: string
   icon: (props: SVGProps<SVGSVGElement>) => JSX.Element
   label: string
   children: ReactNode
@@ -79,24 +93,31 @@ AppMenu.Group = function AppMenuGroup({
       "Для компонента <AppMenu.Group /> отсутствует родительский компонент <AppMenu />",
     )
 
-  const { openSubItems, setOpenSubItems } = context
+  const { openSubItems, setOpenSubItems, pathname } = context
+
+  const isActivePath = pathname.includes(path)
 
   return (
-    <Sidebar.ItemWrapper className={"group/item-wrapper relative"}>
+    <div className={"group/item-wrapper relative"}>
       <AppMenu.Item
-        to={to}
+        to={path}
         icon={icon}
         label={label}
-        onClick={() =>
-          setOpenSubItems((prev) => ({ ...prev, [to]: !prev[to] }))
-        }
-        className={"group/item"}
+        onClick={(e) => {
+          e.preventDefault()
+          setOpenSubItems((prev) => ({ ...prev, [path]: !prev[path] }))
+        }}
       />
 
-      <Sidebar.SubItems
+      <div
         className={classNames(
-          "fixed bottom-[93px] left-0 z-10 flex w-screen flex-col items-start gap-1 border-t bg-white p-2 peer-data-[active=false]:hidden md:relative md:bottom-auto md:w-auto md:border-t-0 md:p-0 md:group-aria-[expanded=false]:absolute md:group-aria-[expanded=false]:left-12 md:group-aria-[expanded=false]:top-0 md:group-aria-[expanded=false]:hidden md:group-aria-[expanded=false]:rounded-lg md:group-aria-[expanded=false]:border md:group-aria-[expanded=false]:p-2 md:group-aria-[expanded=true]:pl-4 md:group-aria-[expanded=true]:pt-2 md:group-aria-[expanded=false]:group-hover/item-wrapper:flex",
-          { "!flex": openSubItems[to] },
+          "fixed bottom-[93px] left-0 z-10 flex w-screen flex-col items-start gap-1 border-t bg-white p-2 md:relative md:bottom-auto md:w-auto md:border-t-0 md:p-0 md:group-aria-[expanded=false]:absolute md:group-aria-[expanded=false]:left-12 md:group-aria-[expanded=false]:top-0 md:group-aria-[expanded=false]:rounded-lg md:group-aria-[expanded=false]:border md:group-aria-[expanded=false]:p-2 md:group-aria-[expanded=true]:pl-4 md:group-aria-[expanded=true]:pt-2 md:group-aria-[expanded=false]:group-hover/item-wrapper:flex",
+          {
+            // hidden: !openSubItems[path] && !isActivePath,
+            // "data-aria-expanded:hidden": !isActivePath,
+            // flex: openSubItems[path],
+            // "md:group-aria-[expanded=false]:flex": isActivePath,
+          },
         )}
       >
         <p
@@ -110,7 +131,8 @@ AppMenu.Group = function AppMenuGroup({
           if (isValidElement(child) && child.type === AppMenu.Item) {
             const props = { ...(child.props as AppMenuItemProps) }
 
-            props.to = `${to}/${props.to}` // !!!
+            props.isSubItem = true
+            props.to = `${path}/${props.to}` // !!!
 
             return cloneElement(child, { ...props })
           }
@@ -119,8 +141,8 @@ AppMenu.Group = function AppMenuGroup({
             "Компонент <AppMenu.Group /> принимает только компоненты <AppMenu.Item />",
           )
         })}
-      </Sidebar.SubItems>
-    </Sidebar.ItemWrapper>
+      </div>
+    </div>
   )
 }
 
@@ -130,6 +152,7 @@ type AppMenuItemProps = {
   icon?: (props: SVGProps<SVGSVGElement>) => JSX.Element
   onClick?: MouseEventHandler<HTMLAnchorElement>
   className?: string
+  isSubItem?: boolean
 }
 
 AppMenu.Item = function AppMenuItem({
@@ -138,9 +161,14 @@ AppMenu.Item = function AppMenuItem({
   icon: Icon,
   onClick,
   className,
+  isSubItem = false,
 }: AppMenuItemProps) {
   return (
-    <NavLink to={to} className={className} onClick={onClick}>
+    <NavLink
+      to={to}
+      className={classNames("group/item w-full", className)}
+      onClick={onClick}
+    >
       {({ isActive }) => (
         <Sidebar.Item
           isActive={isActive}
@@ -156,9 +184,11 @@ AppMenu.Item = function AppMenuItem({
           >
             {!!Icon && <Icon className={"size-6"} />}
             <p
-              className={
-                "block whitespace-nowrap md:hidden md:group-aria-expanded:block md:group-aria-[expanded=false]:group-hover/item:absolute md:group-aria-[expanded=false]:group-hover/item:left-16 md:group-aria-[expanded=false]:group-hover/item:block md:group-aria-[expanded=false]:group-hover/item:rounded-md md:group-aria-[expanded=false]:group-hover/item:bg-gray-100 md:group-aria-[expanded=false]:group-hover/item:p-2 md:group-aria-[expanded=false]:group-hover/item:text-black"
-              }
+              className={classNames("block whitespace-nowrap text-left", {
+                "self-start": isSubItem,
+                "md:hidden md:group-aria-expanded:block md:group-aria-[expanded=false]:group-hover/item:absolute md:group-aria-[expanded=false]:group-hover/item:left-16 md:group-aria-[expanded=false]:group-hover/item:block md:group-aria-[expanded=false]:group-hover/item:rounded-md md:group-aria-[expanded=false]:group-hover/item:bg-gray-100 md:group-aria-[expanded=false]:group-hover/item:p-2 md:group-aria-[expanded=false]:group-hover/item:text-black":
+                  !isSubItem,
+              })}
             >
               {label}
             </p>
