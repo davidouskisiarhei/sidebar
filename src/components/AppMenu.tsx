@@ -113,10 +113,8 @@ AppMenu.Group = function AppMenuGroup({
         className={classNames(
           "fixed bottom-[93px] left-0 z-10 flex w-screen flex-col items-start gap-1 border-t bg-white p-2 md:relative md:bottom-auto md:w-auto md:border-t-0 md:p-0 md:group-aria-[expanded=false]:absolute md:group-aria-[expanded=false]:left-12 md:group-aria-[expanded=false]:top-0 md:group-aria-[expanded=false]:rounded-lg md:group-aria-[expanded=false]:border md:group-aria-[expanded=false]:p-2 md:group-aria-[expanded=true]:pl-4 md:group-aria-[expanded=true]:pt-2 md:group-aria-[expanded=false]:group-hover/item-wrapper:flex",
           {
-            // hidden: !openSubItems[path] && !isActivePath,
-            // "data-aria-expanded:hidden": !isActivePath,
-            // flex: openSubItems[path],
-            // "md:group-aria-[expanded=false]:flex": isActivePath,
+            hidden: !openSubItems[path],
+            "md:group-aria-expanded:flex": openSubItems[path] || isActivePath,
           },
         )}
       >
