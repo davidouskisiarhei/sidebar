@@ -1,7 +1,6 @@
 import { createContext, useContext, useState } from "react"
 import type {
   Dispatch,
-  ElementType,
   MouseEventHandler,
   PropsWithChildren,
   ReactNode,
@@ -62,7 +61,7 @@ Sidebar.Items = function Items({
 }
 
 // основной пункт сайдбара
-Sidebar.Item = function Item<T extends ElementType = "button">({
+Sidebar.Item = function Item({
   isActive, // флаг, который указывает на то, активный пункт или нет
   className,
   onClick,

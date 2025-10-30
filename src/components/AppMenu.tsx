@@ -1,24 +1,28 @@
 import React, {
   createContext,
-  Dispatch,
-  JSX,
-  type ReactNode,
-  SVGProps,
   useState,
-  SetStateAction,
   useContext,
-  MouseEventHandler,
   Children,
   isValidElement,
   cloneElement,
   useEffect,
 } from "react"
+import type {
+  Dispatch,
+  JSX,
+  ReactNode,
+  SVGProps,
+  SetStateAction,
+  MouseEventHandler,
+} from "react"
 import { BrowserRouter, NavLink, useLocation } from "react-router"
 import classNames from "classnames"
 
-import { Sidebar } from "./headless/Sidebar"
 import { ExpandIcon } from "../assets/icons"
 
+import { Sidebar } from "./headless/Sidebar"
+
+// контекст, который будет хранить возмодные состояния AppMenu
 const AppMenuContext = createContext<{
   openSubItems: SubItems
   setOpenSubItems: Dispatch<SetStateAction<SubItems>>
@@ -27,6 +31,8 @@ const AppMenuContext = createContext<{
 
 type SubItems = { [key: string]: boolean }
 
+// компонент предоставляет удобный апи для создания меню приложения с использовнием роутинга и headless компонента Sidebar,
+// минимизирует использование кода в компоненте потребителе
 export function AppMenu({
   basename,
   children,
@@ -41,9 +47,12 @@ export function AppMenu({
   )
 }
 
+// компонент создан отдельно для того, чтобы можно было использовать хуки библиотеки react-router
+// без обертки BrowserRouter использовать хуки не получилось бы
 function AppMenuContent({ children }: { children: ReactNode }) {
   const { pathname } = useLocation()
 
+  // объект, который хранит состояния открытых/закрытых сабкомпонентов меню
   const [openSubItems, setOpenSubItems] = useState<SubItems>({})
 
   useEffect(() => {
@@ -53,7 +62,6 @@ function AppMenuContent({ children }: { children: ReactNode }) {
   return (
     <AppMenuContext value={{ openSubItems, setOpenSubItems, pathname }}>
       <Sidebar
-        defaultExpanded
         className={
           "group fixed bottom-0 flex w-screen justify-center border-t bg-white p-2 md:relative md:h-screen md:w-fit md:flex-col md:justify-between md:gap-2 md:border-r md:aria-expanded:w-52"
         }
@@ -75,8 +83,9 @@ function AppMenuContent({ children }: { children: ReactNode }) {
   )
 }
 
+// компонент обертка, с момощью которого в меню добавляется сабменю
 AppMenu.Group = function AppMenuGroup({
-  path,
+  path, // часть пути, которая дополняет вложенный путь компонента AppMenu.Item
   icon,
   label,
   children,
@@ -88,6 +97,7 @@ AppMenu.Group = function AppMenuGroup({
 }) {
   const context = useContext(AppMenuContext)
 
+  // ограничение возможности использования дочерних компонентов элемента AppMenu
   if (context === null)
     throw new Error(
       "Для компонента <AppMenu.Group /> отсутствует родительский компонент <AppMenu />",
@@ -95,6 +105,7 @@ AppMenu.Group = function AppMenuGroup({
 
   const { openSubItems, setOpenSubItems, pathname } = context
 
+  // проверка на то, является ли передаваемый путь компонента частью текущего урла
   const isActivePath = pathname.includes(path)
 
   return (
@@ -125,14 +136,18 @@ AppMenu.Group = function AppMenuGroup({
         >
           {label}
         </p>
+        {/* для того, чтобы можно было дополнить пути вложенных AppMenu.Item, нужно перебрать вложенные элементы */}
         {Children.map(children, (child) => {
+          // проверка на то, является ли вложенный элемент компонентом AppMenu.Item, если нет, вернется ошибка,
+          // т.к. в данный компонент можно передавать только компоненты AppMenu.Item
           if (isValidElement(child) && child.type === AppMenu.Item) {
+            // копируем пропсы вложенного элемента, чтобы можно было их изменить
             const props = { ...(child.props as AppMenuItemProps) }
 
-            props.isSubItem = true
-            props.to = `${path}/${props.to}` // !!!
+            props.isSubItem = true // от этого флага зависит список классов, который будет присвоен элементу AppMenu.Item
+            props.to = `${path}/${props.to}` // дополняем путь вложенного элемента частью роута AppMenu.Group
 
-            return cloneElement(child, { ...props })
+            return cloneElement(child, { ...props }) // клонируем элемент с дополненными и измененными пропсами
           }
 
           throw new Error(
@@ -153,6 +168,7 @@ type AppMenuItemProps = {
   isSubItem?: boolean
 }
 
+// компонент пункта меню
 AppMenu.Item = function AppMenuItem({
   to,
   label,
